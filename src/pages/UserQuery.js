@@ -16,23 +16,19 @@ export default function Users() {
     const [isOpen, setIsOpen] = useState(false)
     const [favorites, setFavorites] = useState([])
 
-    const {state, dispatch} = useContext(FavoritesContext)
+    const { state, dispatch } = useContext(FavoritesContext)
 
-    console.log(state)
 
     useEffect(() => {
         let data = JSON.parse(localStorage.getItem('favorites'))
 
-        console.log(data, 'data')
         if (!data) {
-            data = ['test', 'test2']
+            data = []
         }
-        console.log(data)
-        
-        dispatch({type: "ADD", payload: data})
+
+        dispatch({ type: 'ADD', payload: data })
     }, [])
 
-    
     async function handleQueryFav(e, user) {
         e.preventDefault()
         try {
@@ -67,7 +63,25 @@ export default function Users() {
         }
     }
 
+    function addFavorites(fav) {
+        let newFavorites
 
+        let favorites
+
+        if (localStorage.getItem('favorites')) {
+            favorites = JSON.parse(localStorage.getItem('favorites'))
+        }
+
+        if (!favorites) {
+            newFavorites = [fav]
+        } else {
+            newFavorites = [...favorites, fav]
+        }
+
+
+        localStorage.setItem('favorites', JSON.stringify(newFavorites))
+        dispatch({type: "ADD", payload: newFavorites})
+    }
 
     if (loading) {
         return <Loading />
@@ -113,7 +127,7 @@ export default function Users() {
                         <FaSearch /> Search
                     </button>
                     <button
-                        onClick={() => setFavorites([query, ...favorites])}
+                        onClick={() => addFavorites(query)}
                         className='fav'
                         type='button'
                         disabled={!query}

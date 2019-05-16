@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyledFavorites } from '../styles/StyledFavorites'
+import { FavoritesContext } from '../favoritesContext'
 
-export default function Favorites({
-    favorites,
-    setFavorites,
-    handleQueryFav
-}) {
+export default function Favorites({ handleQueryFav }) {
+    const { state, dispatch } = useContext(FavoritesContext)
+
+
+    console.log(state, "state")
     function handleFavoriteRemoval(user) {
-        const newFavorites = favorites.filter(fav => user !== fav)
+        const newFavorites = state.filter( fav => fav !== user)
 
-        setFavorites(newFavorites)
+        localStorage.setItem('favorites', JSON.stringify(newFavorites))
+        dispatch({type: "ADD", payload: newFavorites})
     }
 
     function fireQuery(e, user) {
@@ -18,13 +20,13 @@ export default function Favorites({
 
     return (
         <StyledFavorites>
-            {favorites.length !== 0 ? (
+            {state.length !== 0 || undefined? (
                 <h1>Favorites:</h1>
             ) : (
                 <h1>You don't have any favorites saved</h1>
             )}
-            {favorites &&
-                favorites.map((user, i) => {
+            {state &&
+                state.map((user, i) => {
                     return (
                         <div key={i} className='favs'>
                             <div

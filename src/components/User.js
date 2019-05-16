@@ -24,7 +24,6 @@ export default function User({
 
             setRepos(data)
             setLoading(false)
-            console.log(data)
         } catch (e) {
             setLoading(false)
             console.log(e.message)
