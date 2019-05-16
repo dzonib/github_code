@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { FaSearch, FaRegHeart } from 'react-icons/fa'
 
@@ -6,6 +6,7 @@ import { StyledSearch } from '../styles/StyledSearch'
 import User from '../components/User'
 import Loading from '../components/Loading'
 import Favorites from '../components/Favorites'
+import { FavoritesContext } from '../favoritesContext'
 
 export default function Users() {
     const [query, setQuery] = useState('')
@@ -14,6 +15,22 @@ export default function Users() {
     const [loading, setLoading] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const [favorites, setFavorites] = useState([])
+
+    const {state, dispatch} = useContext(FavoritesContext)
+
+    console.log(state)
+
+    useEffect(() => {
+        let data = JSON.parse(localStorage.getItem('favorites'))
+
+        console.log(data, 'data')
+        if (!data) {
+            data = ['test', 'test2']
+        }
+        console.log(data)
+        
+        dispatch({type: "ADD", payload: data})
+    }, [])
 
     
     async function handleQueryFav(e, user) {
